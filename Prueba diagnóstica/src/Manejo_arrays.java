@@ -78,9 +78,8 @@ public class Manejo_arrays {
 		for(int i = 0; i < matrix.length; i++)
 		{
 			for (int j = 0; j < matrix[0].length; j++)
-			{
 				aux += matrix[i][j];
-			}
+			
 			System.out.println("\nProducción total de la semana " + (i + 1) + " : " + aux);
 			aux = 0;
 			greaterCow(matrix, i);
