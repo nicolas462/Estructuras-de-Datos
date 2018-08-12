@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 /**
  * 
@@ -12,7 +13,7 @@ import java.io.InputStreamReader;
  */
 public class Manejo_arrays {
 	
-	BufferedReader br = new BufferedReader (new InputStreamReader(System.in));
+	static BufferedReader br = new BufferedReader (new InputStreamReader(System.in));
 	
 	/**
 	 * Convierte un String en un arreglo de enteros.
@@ -38,6 +39,70 @@ public class Manejo_arrays {
 	{
 		for (int i = 0; i < array.length; i++)
 			System.out.print(array[i] + " ");
+	}
+	
+	/**
+	 * Imprime matriz.
+	 * @param matrix
+	 */
+	private static void printMatrix (int[][] matrix)
+	{
+		for (int i = 0; i < matrix.length; i++)
+		{
+			for (int j = 0; j < matrix[i].length; j++)
+				System.out.print(matrix[i][j] + "\t");
+			System.out.print("\n");
+		}
+	}
+	
+	/**
+	 * Llenar matriz.
+	 * @param matrix
+	 */
+	private static void fillMatrix (int[][] matrix)
+	{
+		Random rd = new Random();
+
+		for (int i = 0; i < matrix.length; i++)
+			for (int j = 0; j < matrix[0].length; j++)
+				matrix[i][j] = rd.nextInt(120) + 1;
+	}
+	
+	/**
+	 * Calcula producción total de la semana y la imprime, junto con el número de la vaca que dio más leche por día.
+	 * @param matrix
+	 */
+	private static void prodTotal (int[][] matrix)
+	{
+		int aux = 0;
+		for(int i = 0; i < matrix.length; i++)
+		{
+			for (int j = 0; j < matrix[0].length; j++)
+			{
+				aux += matrix[i][j];
+			}
+			System.out.println("\nProducción total de la semana " + (i + 1) + " : " + aux);
+			aux = 0;
+			greaterCow(matrix, i);
+		}
+	}
+	
+	/**
+	 * Muestra la mayor cantidad de litros en la semana, con la cantidad y el número de vaca.
+	 * @param matrix
+	 * @param week = fila
+	 */
+	private static void greaterCow (int[][] matrix, int week)
+	{
+		int greater = 0, greaterIndex = 0;
+		
+		for (int i = 0; i < matrix[0].length; i++)
+			if (matrix[week][i] > greater)
+			{
+				greater = matrix[week][i];
+				greaterIndex = i;
+			}
+		System.out.println("\tLa vaca con mayor producción fue la No. " + (greaterIndex + 1) + ", con " + greater + " Litros.");
 	}
 	
 	/**
@@ -101,5 +166,22 @@ public class Manejo_arrays {
 			print(array);
 		}
 		catch (Exception ex) {}
+	}
+	
+	/**
+	 * 
+	 * @param n = número de vacas
+	 */
+	public void punto3(int n)
+	{
+		try 
+		{
+			int[][] hato = new int [7][n];
+			
+			fillMatrix(hato);
+			printMatrix(hato);
+			prodTotal(hato);
+		}
+		catch(Exception ex){}
 	}
 }
