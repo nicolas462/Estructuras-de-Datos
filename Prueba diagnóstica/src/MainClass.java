@@ -18,7 +18,11 @@ public class MainClass {
 		Manejo_arrays parte1 = new Manejo_arrays();
 		//parte1.punto1();
 		//parte1.punto2();
-		parte1.punto3(7);
+		//parte1.punto3(7);
+		
+		Recursiones parte2 = new Recursiones();
+		//parte2.punto1();
+		parte2.punto2(10, 40);
 	}
 
 }
