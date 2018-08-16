@@ -64,7 +64,7 @@ public class MainClass {
 						columna = sc.nextInt();
 						while(!(columna >= 0 && columna < 3))
 						{
-							System.out.println("Valor de columna inválido. Digítelo de nuevo.");
+							 System.out.println("Valor de columna inválido. Digítelo de nuevo.");
 							columna = sc.nextInt();
 						}
 						check = filled(matrix, fila, columna);
