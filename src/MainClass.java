@@ -68,11 +68,10 @@ public class MainClass {
 							columna = sc.nextInt();
 						}
 						check = filled(matrix, fila, columna);
-						if (filled(matrix, fila, columna))
+						
+						if (check)
 							System.out.println("Casilla llena. Ingrese fila y columna nuevamente.");
 						matrix[fila][columna] = 1;
-						
-						
 					} while(check);
 					break;
 				default:
