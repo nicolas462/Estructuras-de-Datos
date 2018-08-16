@@ -25,6 +25,34 @@ public class MainClass {
 		}
 	}
 	
+	static void turno (int [][] matrix, int num)
+	{
+		Scanner sc = new Scanner(System.in);
+		boolean check = false;
+		int fila = 0, columna = 0;
+		do
+		{
+			fila = sc.nextInt();
+			while(!(fila >= 0 && fila < 3))
+			{
+				System.out.println("Valor de fila inválido. Digítelo de nuevo.");
+				fila = sc.nextInt();
+			}
+			
+			columna = sc.nextInt();
+			while(!(columna >= 0 && columna < 3))
+			{
+				System.out.println("Valor de columna inválido. Digítelo de nuevo.");
+				columna = sc.nextInt();
+			}
+			check = filled(matrix, fila, columna);
+			
+			if (check)
+				System.out.println("Casilla llena. Ingrese fila y columna nuevamente.");
+			matrix[fila][columna] = num;
+		} while(check);
+	}
+	
 	static boolean filled (int matrix[][], int fila, int columna)
 	{
 		if(matrix[fila][columna] != 0)
@@ -37,7 +65,7 @@ public class MainClass {
 		Scanner sc = new Scanner(System.in);
 		int matrix [][] = new int [3][3];
 		
-		int menu = 0, fila = 0, columna = 0;
+		int menu = 0;
 		do
 		{
 			System.out.println("1. Mostrar estado actual del tablero.");
@@ -50,29 +78,10 @@ public class MainClass {
 					mostrarMatriz(matrix);
 					break;
 				case 2:
-					boolean check = false;
 					System.out.println("Turno jugador A(1). Digite coordenadas de cero a tres (fila, columna).");
-					do
-					{
-						fila = sc.nextInt();
-						while(!(fila >= 0 && fila < 3))
-						{
-							System.out.println("Valor de fila inválido. Digítelo de nuevo.");
-							fila = sc.nextInt();
-						}
-						
-						columna = sc.nextInt();
-						while(!(columna >= 0 && columna < 3))
-						{
-							 System.out.println("Valor de columna inválido. Digítelo de nuevo.");
-							columna = sc.nextInt();
-						}
-						check = filled(matrix, fila, columna);
-						
-						if (check)
-							System.out.println("Casilla llena. Ingrese fila y columna nuevamente.");
-						matrix[fila][columna] = 1;
-					} while(check);
+					turno(matrix, 1);
+					System.out.println("Turno jugador B(2). Digite coordenadas de cero a tres (fila, columna).");
+					turno(matrix, 2);
 					break;
 				default:
 					System.out.println("Valor inválido. Digite 1 para volver al menú, 0 para salir.");
