@@ -74,13 +74,14 @@ public class Manejo_arrays {
 	 */
 	private static void prodTotal (int[][] matrix)
 	{
+		String [] days = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
 		int aux = 0;
 		for(int i = 0; i < matrix.length; i++)
 		{
 			for (int j = 0; j < matrix[0].length; j++)
 				aux += matrix[i][j];
 			
-			System.out.println("\nProducción total de la semana " + (i + 1) + " : " + aux);
+			System.out.println("\nProducción total del " + days[i] + " : " + aux);
 			aux = 0;
 			greaterCow(matrix, i);
 		}
