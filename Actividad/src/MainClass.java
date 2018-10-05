@@ -19,7 +19,7 @@ public class MainClass
 	 */
 	public static LinkedList <Integer> clientes(int n)
 	{
-		Random rd = new Random();
+				Random rd = new Random();
 		LinkedList <Integer> colaClientes = new LinkedList <Integer>();
 		int tiempo = 0, aux;
 		for(int i = 0 ; i < n ; i++)
