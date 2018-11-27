@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
  */
 public class MainClass 
 {
-	
 	static void imprimirPostres(String[] n)
 	{
 		for(int i = 0; i < n.length; i++)
