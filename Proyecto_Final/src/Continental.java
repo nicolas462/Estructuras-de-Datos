@@ -1,20 +1,29 @@
 public class Continental
 {
 	public int [][] tablero = new int [7][7];
-	int candidateI, candidateJ; // Coordenadas para el espacio en blanco a operar.
-	int fichas;
+	int m = 31; // número máximo de movimientos
+	int n = 7; // tamaño del tablero
+	int solucion[] = new int [m];
 	
 	Continental()
 	{
 		defaultParameters(this.tablero);
-		candidateI = 3;
-		candidateJ = 3;
-		fichas =  32;
 	}
 	
+	/**
+	 * Se establecen los valores predeterminados de la tabla.
+	 * Donde:
+	 * -1 Equivale a una casilla no válida.
+	 * 0 Equivale a una casilla desocupada.
+	 * 1 Equivale a una casilla ocupada.
+	 * @param tablero
+	 */
 	private void defaultParameters(int tablero[][])
 	{
-		tablero[3][3] = -1;
+		for (int i = 0; i < tablero.length; i++)
+			for(int j = 0; j < tablero[0].length; j++)
+				tablero[i][j] = 1;
+		tablero[3][3] = 0;
 		tablero[0][0] = -1;
 		tablero[0][1] = -1;
 		tablero[0][5] = -1;
@@ -33,13 +42,17 @@ public class Continental
 		tablero[6][6] = -1;
 	}
 	
-	public void printBoard(int tablero[][])
+	/**
+	 * Función para imprimir en pantalla el tablero
+	 * @param tablero
+	 */
+	public static void printBoard(int tablero[][])
 	{
 		for (int i = 0; i < tablero.length; i++)
 		{
 			for (int j = 0; j < tablero[i].length; j++)
 			{
-				if(tablero[i][j] == -1)
+				if(tablero[i][j] < 1)
 					System.out.print("     " );
 				else
 					System.out.print("  o  " );
@@ -49,98 +62,135 @@ public class Continental
 		System.out.println("-------------------------------------");
 	}
 	
-	public void operar(Arbol arbol, Continental etapa, int candidateI, int candidateJ, int fichas)
+	public void operacion(int k, int t[][], boolean encontrado, String sol[])
 	{
-		/*si se pasa de número de fichas
-		 * 	return false;*/
-		arbol.insert(new NodoBinario (etapa.tablero));
-		etapa.fichas = fichas;
-		etapa.printBoard(etapa.tablero);
-		boolean exito = false;
-		do
-		{
-			if (etapa.valido(etapa.tablero, candidateI, candidateJ))
+		printBoard(t);
+		//System.out.println(k);
+		//do
+		//{
+			if (fin(k, t))
 			{
-				if (etapa.fichas == 1) // Ya se llegó a la solución
-				{
-					etapa.printBoard(etapa.tablero);
-					System.out.println("SOLUCIÓN");
-					exito = true;
-					return;
-				}
-				else
-				{
-					int i = candidateI;
-					int j = candidateJ;
-					etapa.tablero[i][j] = 1;
-					while(true)
+				encontrado = true;
+				return;
+			}
+			else
+			{
+				for (int i = 0; i < 7; i++)
+					for (int j = 0; j < 7; j++)
 					{
-						if(etapa.position(tablero, candidateI, candidateJ) == 0)
+						
+						if (valido(i, j, 0, t, encontrado)) // A la izquierda
 						{
-							j --;
-							etapa.tablero[i][j - 1] = -1;
-							break;
+							k ++;
+							//System.out.println("Izquierda " + k);
+							//origen x, origen y, destino x, destino y, comido x, comido y
+							sol[k] = i + "-" + j + "-" + i + "-" + (j - 2) + "-" + i + "-" + (j - 1);
+							t = nuevaTabla(t, sol[k]); // Actualizar tablero
+							operacion(k, t, encontrado, sol);
 						}
-						if(etapa.position(tablero, candidateI, candidateJ) == 2)
+						if (valido(i, j, 1, t, encontrado)) // Hacia arriba
 						{
-							j ++;
-							etapa.tablero[i][j + 1] = -1;
-							break;
+							k ++;
+							//System.out.println("Arriba " + k);
+							//origen x, origen y, destino x, destino y, comido x, comido y
+							sol[k] = i + "-" + j + "-" + (i - 2) + "-" + j + "-" + (i - 1) + "-" + j;
+							t = nuevaTabla(t, sol[k]); // Actualizar tablero
+							operacion(k, t, encontrado, sol);
 						}
-						if(etapa.position(tablero, candidateI, candidateJ) == 1)
+						if (valido(i, j, 2, t, encontrado)) // A la derecha
 						{
-							i --;
-							etapa.tablero[i - 1][j] = -1;
-							break;
+							k ++;
+							//System.out.println("Derecha " + k);
+							//origen x, origen y, destino x, destino y, comido x, comido y
+							sol[k] = i + "-" + j + "-" + i + "-" + (j + 2) + "-" + i + "-" + (j + 1);
+							t = nuevaTabla(t, sol[k]); // Actualizar tablero
+							operacion(k, t, encontrado, sol);
 						}
-						if(etapa.position(tablero, candidateI, candidateJ) == 3)
+						if (valido(i, j, 3, t, encontrado)) // Hacia abajo
 						{
-							i ++;
-							etapa.tablero[i + 1][j] = -1;
-							break;
+							k ++;
+							//System.out.println("Abajo " + k);
+							//origen x, origen y, destino x, destino y, comido x, comido y
+							sol[k] = i + "-" + j + "-" + (i + 2) + "-" + j + "-" + (i + 1) + "-" + j;
+							t = nuevaTabla(t, sol[k]); // Actualizar tablero
+							operacion(k, t, encontrado, sol);
 						}
 					}
-					etapa.tablero[i][j] = -1;
-					operar(arbol, etapa, i, j, fichas - 1);
+				if (!encontrado) // Cancelar anotación
+				{
+					t = restaurarTabla(t, sol[k]);
+					k--;
+					System.out.println("Tabla restaurada");
+					printBoard(t);
+					//k --;
 				}
-				//Borrar etapa
 			}
-		} while(etapa.fichas == 1 && !exito); //Solución etapa ya sea la última o ya haya éxito
-		return;
+		//} while(!encontrado);
+		
 	}
 	
-	
-	
-	public boolean valido(int tablero[][], int i, int j)
+	public static int [][] restaurarTabla (int t[][], String sol)
 	{
-		return this.position(tablero, i, j) > -1 ? true : false;	
+		String temp [] = sol.split("-"); //coordenadas
+		//Restablecer origen
+		t[Integer.parseInt(temp[0])][Integer.parseInt(temp[1])] = 1;
+		//Restablecer destino
+		t[Integer.parseInt(temp[2])][Integer.parseInt(temp[3])] = 0;
+		//Restablecer ficha comida
+		t[Integer.parseInt(temp[4])][Integer.parseInt(temp[5])] = 1;
+		return t;
 	}
 	
-	public int position(int tablero[][], int i, int j)
+	public static int [][] nuevaTabla (int t[][], String sol)
 	{
-		if(tablero[i][j - 1] != -1) //left
-			if(tablero[i][j - 2] != -1)
-				return 0;
-		if(tablero[i - 1][j] != -1) //right
-			if(tablero[i - 2][j] != -1)
-				return 1;
-		if(tablero[i][j + 1] != -1) //up
-			if(tablero[i][j + 2] != -1)
-				return 2;
-		if(tablero[i + 1][j] != -1) //down
-			if(tablero[i + 2][j] != -1)
-				return 3;
-		return -1;
+		String temp [] = sol.split("-"); //coordenadas
+		//Quitar origen
+		t[Integer.parseInt(temp[0])][Integer.parseInt(temp[1])] = 0;
+		//Ocupar destino
+		t[Integer.parseInt(temp[2])][Integer.parseInt(temp[3])] = 1;
+		//Quitar ficha comida
+		t[Integer.parseInt(temp[4])][Integer.parseInt(temp[5])] = 0;
+		return t;
 	}
 	
+	public static boolean valido(int i, int j, int mov, int t[][], boolean e)
+	{
+		if (mov == 0) //izquierda
+			if((j - 1 > 0) && (t[i][j] == 1) && (t[i][j - 1] == 1)
+					 && (j - 2 > 0) && (t[i][j - 2] == 0) && (!e)) 
+				return true;
+		if (mov == 1) // arriba
+			if ((i - 1 > 0) && (t[i - 1][j] == 1) && (t[i][j] == 1)
+					 && (i - 2 > 0) && (t[i - 2][j] == 0) && (!e)) return true;
+		if (mov == 2) // derecha
+			if ((j + 1 < 7) && (t[i][j + 1] == 1) && (t[i][j] == 1)
+					 && (j + 2 < 7) && (t[i][j + 2] == 0) && (!e)) return true;
+		if (mov == 3) // abajo
+			if ((i + 1 < 7) && (t[i + 1][j] == 1) && (t[i][j] == 1)
+					 && (i + 2 < 7) && (t[i + 2][j] == 0) && (!e)) return true;
+		return false;
+	}
+	
+	/**
+	 * Retorna true si el número de movimientos llega a 31 y la ficha sobrante está en el medio
+	 * @param k
+	 * @param t
+	 * @return
+	 */
+	public static boolean fin(int k, int t[][])
+	{
+		return (k == 31 && t[3][3] == 1) ? true : false;
+	}
 	
 	public static void main(String[] args) 
 	{
 		Continental continental = new Continental();
-		Arbol arbol = new Arbol();
-		arbol.insert(new NodoBinario (continental.tablero));
+		String solucion [] = new String [31]; 
+		continental.operacion(0, continental.tablero, false, solucion);
+		//Arbol arbol = new Arbol();
+		//arbol.insert(new NodoBinario (continental.tablero));
 		//continental.tablero[3][3] = -1;
-		continental.operar(arbol, continental, continental.candidateI, continental.candidateJ, continental.fichas);
+		//continental.operar(arbol, continental, continental.candidateI, continental.candidateJ, continental.fichas);
 		
 	}
 }
